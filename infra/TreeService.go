@@ -1,4 +1,4 @@
-package domainservices
+package infra
 
 import (
 	"BigDisk/domainmodels"
@@ -44,18 +44,18 @@ func (p *TreeService) GetUnit(path string) (*domainmodels.FileUnit, error) {
 		Size: 0,
 	}
 
-	childrens, err := os.ReadDir(filepath.Join(path, info.Name()))
+	childrens, err := os.ReadDir(path)
 
 	if err != nil {
-		fmt.Printf("ReadDir error. Path=%v, err=%v", filepath.Join(path, info.Name()), err)
+		fmt.Printf("ReadDir error. Path=%v, err=%v\n", path, err)
 		return nil, err
 	}
 
 	for _, x := range childrens {
 		var xu, err = p.GetUnit(filepath.Join(path, x.Name()))
 
-		if err == nil {
-			fmt.Printf("GetUnit error. Path=%v, err=%v", path, err)
+		if err != nil {
+			fmt.Printf("GetUnit error. Path=%v, err=%v\n", filepath.Join(path, x.Name()), err)
 			continue
 		}
 
