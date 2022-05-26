@@ -2,6 +2,10 @@ package domainservices
 
 import (
 	"BigDisk/domainmodels"
+	"BigDisk/template"
+	_ "embed"
+	"encoding/json"
+	"strings"
 )
 
 type TreeProcessor struct {
@@ -45,4 +49,19 @@ func (p *TreeProcessor) ToFlameNode(unit *domainmodels.FileUnit) *domainmodels.F
 	}
 
 	return flame
+}
+
+func (p *TreeProcessor) GenerateReportHtml(node *domainmodels.FlameNode) string {
+	if node == nil {
+		panic("node is nil")
+	}
+	flameDataBytes, err := json.Marshal(node)
+
+	if err != nil {
+		panic(err)
+	}
+
+	var html = strings.ReplaceAll(template.GetHtmlTemplate(), "{flameDataPlaceHolder}", string(flameDataBytes))
+
+	return html
 }
