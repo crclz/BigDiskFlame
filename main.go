@@ -20,10 +20,12 @@ func main() {
 	fmt.Printf("unit addr: %p\n", unit)
 	treeProcessor.Process(unit)
 
-	d, err := json.Marshal(unit)
+	var flame = treeProcessor.ToFlameNode(unit)
+
+	d, err := json.Marshal(flame)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Printf("unit: %s\n", d)
+	fmt.Printf("flame: %s\n", d)
 }

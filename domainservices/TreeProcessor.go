@@ -32,3 +32,17 @@ func (p *TreeProcessor) Process(unit *domainmodels.FileUnit) {
 		unit.Size += u.Size
 	}
 }
+
+func (p *TreeProcessor) ToFlameNode(unit *domainmodels.FileUnit) *domainmodels.FlameNode {
+	var flame = &domainmodels.FlameNode{
+		Name:  unit.Name,
+		Value: unit.Size,
+	}
+
+	for _, u := range unit.Children {
+		var node = p.ToFlameNode(u)
+		flame.Children = append(flame.Children, node)
+	}
+
+	return flame
+}
