@@ -1,0 +1,34 @@
+package domainservices
+
+import (
+	"BigDisk/domainmodels"
+)
+
+type TreeProcessor struct {
+}
+
+func NewTreeProcessor() *TreeProcessor {
+	return &TreeProcessor{}
+}
+
+var singletonTreeProcessor *TreeProcessor = initSingletonTreeProcessor()
+
+func GetSingletonTreeProcessor() *TreeProcessor {
+	return singletonTreeProcessor
+}
+
+func initSingletonTreeProcessor() *TreeProcessor {
+	return NewTreeProcessor()
+}
+
+func (p *TreeProcessor) Process(unit *domainmodels.FileUnit) {
+	if unit == nil {
+		panic("unit is nil")
+	}
+
+	for _, u := range unit.Children {
+		p.Process(u)
+
+		unit.Size += u.Size
+	}
+}
