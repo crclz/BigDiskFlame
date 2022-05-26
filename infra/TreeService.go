@@ -28,6 +28,7 @@ func (p *TreeService) GetUnit(path string) (*domainmodels.FileUnit, error) {
 	var info, err = os.Lstat(path)
 
 	if err != nil {
+		fmt.Printf("Lstat error. Path=%v, err=%v\n", path, err)
 		return nil, err
 	}
 
@@ -55,7 +56,6 @@ func (p *TreeService) GetUnit(path string) (*domainmodels.FileUnit, error) {
 		var xu, err = p.GetUnit(filepath.Join(path, x.Name()))
 
 		if err != nil {
-			fmt.Printf("GetUnit error. Path=%v, err=%v\n", filepath.Join(path, x.Name()), err)
 			continue
 		}
 
