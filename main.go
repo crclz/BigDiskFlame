@@ -12,7 +12,7 @@ func main() {
 	var treeService = infra.GetSingletonTreeService()
 	var treeProcessor = domainservices.GetSingletonTreeProcessor()
 
-	var unit, err = treeService.GetUnit("C:/Users/chr/Desktop")
+	var unit, err = treeService.GetUnit("C:/Users/chr")
 
 	if err != nil {
 		panic(err)
@@ -20,7 +20,7 @@ func main() {
 
 	treeProcessor.Process(unit)
 
-	var flame = treeProcessor.ToFlameNode(unit)
+	var flame = treeProcessor.ToFlameNode(unit, 1024*1024*100)
 
 	var html = treeProcessor.GenerateReportHtml(flame)
 
