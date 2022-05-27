@@ -43,15 +43,18 @@ func (p *TreeProcessor) ToFlameNode(unit *domainmodels.FileUnit, minSize int64, 
 		Value: float64(unit.Size) / (1024 * 1024),
 	}
 
-	if unit.Size < minSize {
-		return flame
-	}
+	// if unit.Size < minSize {
+	// 	return flame
+	// }
 
 	if depth <= 0 {
 		return flame
 	}
 
 	for _, u := range unit.Children {
+		if u.Size < minSize {
+			continue
+		}
 		var node = p.ToFlameNode(u, minSize, depth-1)
 		flame.Children = append(flame.Children, node)
 	}

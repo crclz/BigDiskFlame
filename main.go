@@ -20,7 +20,7 @@ func main() {
 
 	treeProcessor.Process(unit)
 
-	var flame = treeProcessor.ToFlameNode(unit, 1024*1024*200, 999)
+	var flame = treeProcessor.ToFlameNode(unit, 1024*1024*50, 9)
 
 	var html = treeProcessor.GenerateReportHtml(flame)
 
