@@ -1,18 +1,33 @@
 package main
 
 import (
+	"BigDisk/domainmodels"
 	"BigDisk/domainservices"
 	"BigDisk/infra"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"time"
 )
 
 func main() {
+	var config = &domainmodels.RunConfig{}
+	configData, err := ioutil.ReadFile("config.json")
+
+	if err != nil {
+		panic(err)
+	}
+
+	err = json.Unmarshal(configData, config)
+
+	if err != nil {
+		panic(err)
+	}
+
 	var treeService = infra.GetSingletonTreeService()
 	var treeProcessor = domainservices.GetSingletonTreeProcessor()
 
-	var unit, err = treeService.GetUnit("C:/Users/chr")
+	unit, err := treeService.GetUnit(config.Path)
 
 	if err != nil {
 		panic(err)
@@ -20,7 +35,7 @@ func main() {
 
 	treeProcessor.Process(unit)
 
-	var flame = treeProcessor.ToFlameNode(unit, 1024*1024*50, 9)
+	var flame = treeProcessor.ToFlameNode(unit, config.ReportMinSize, config.MaxDepth)
 
 	var html = treeProcessor.GenerateReportHtml(flame)
 
