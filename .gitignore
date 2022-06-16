@@ -2,3 +2,5 @@
 /BigDisk.exe
 *.result.html
 *.log
+du*.txt
+.DS_Store

@@ -7,10 +7,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"time"
 )
 
-func main() {
+func main_old() {
 	var config = &domainmodels.RunConfig{}
 	configData, err := ioutil.ReadFile("config.json")
 
@@ -46,4 +47,16 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func main() {
+	var treeService = infra.GetSingletonTreeService()
+
+	file, err := os.Open("du-result.txt")
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+
+	treeService.GetUnitFromDuResult(file)
 }

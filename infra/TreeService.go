@@ -2,7 +2,9 @@ package infra
 
 import (
 	"BigDisk/domainmodels"
+	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
 )
@@ -67,4 +69,18 @@ func (p *TreeService) GetUnit(path string) (*domainmodels.FileUnit, error) {
 	}
 
 	return unit, nil
+}
+
+func (p *TreeService) GetUnitFromDuResult(reader io.Reader) (*domainmodels.FileUnit, error) {
+	var scanner = bufio.NewScanner(reader)
+
+	var lines = 0
+
+	for scanner.Scan() {
+		lines++
+	}
+
+	fmt.Printf("lines: %v\n", lines)
+
+	return nil, nil
 }
