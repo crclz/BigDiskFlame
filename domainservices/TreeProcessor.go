@@ -5,6 +5,7 @@ import (
 	"BigDisk/template"
 	_ "embed"
 	"encoding/json"
+	"fmt"
 	"sort"
 	"strings"
 )
@@ -48,16 +49,31 @@ func (p *TreeProcessor) ToFlameNode(unit *domainmodels.FileUnit, minSize int64, 
 		return flame
 	}
 
-	if len(unit.Children) > 0 {
-		sort.Slice(unit.Children, func(i, j int) bool {
-			return unit.Children[i].Size > unit.Children[j].Size
+	// merge small files
+	var newChildren []*domainmodels.FileUnit
+	var smallFileUnit = &domainmodels.FileUnit{Name: "-", Size: 0}
+
+	for _, u := range unit.Children {
+		if u.Size >= minSize {
+			newChildren = append(newChildren, u)
+		} else {
+			smallFileUnit.Size += u.Size
+		}
+	}
+
+	if smallFileUnit.Size > 0 {
+		newChildren = append(newChildren, smallFileUnit)
+		fmt.Printf("%v\n", smallFileUnit.Size)
+	}
+
+	// order by size desc
+	if len(newChildren) > 0 {
+		sort.Slice(newChildren, func(i, j int) bool {
+			return newChildren[i].Size > newChildren[j].Size
 		})
 	}
 
-	for _, u := range unit.Children {
-		if u.Size < minSize {
-			continue
-		}
+	for _, u := range newChildren {
 		var node = p.ToFlameNode(u, minSize, depth-1)
 		flame.Children = append(flame.Children, node)
 	}

@@ -67,7 +67,7 @@ func main() {
 		panic(err)
 	}
 
-	var flameRoot = treeProcessor.ToFlameNode(root, 1024*1024*100, 9)
+	var flameRoot = treeProcessor.ToFlameNode(root, 1024*1024*100, 5)
 
 	var html = treeProcessor.GenerateReportHtml(flameRoot)
 
