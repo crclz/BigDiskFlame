@@ -91,8 +91,6 @@ func (p *TreeService) SelectTrimmedWhereNotWhitespace(x []string) []string {
 func (p *TreeService) GetUnitFromDuResult(reader io.Reader) (*domainmodels.FileUnit, error) {
 	var scanner = bufio.NewScanner(reader)
 
-	var lines = 0
-
 	var rootNode = &domainmodels.FileUnit{Name: ""}
 
 	var nodeMap = map[string]*domainmodels.FileUnit{
@@ -147,10 +145,8 @@ func (p *TreeService) GetUnitFromDuResult(reader io.Reader) (*domainmodels.FileU
 		}
 
 		var node = GetNode(parts[1])
-		node.Size = size
+		node.Size = size * 1024 // KB -> byte
 	}
-
-	fmt.Printf("lines: %v\n", lines)
 
 	return nodeMap[""], nil
 }

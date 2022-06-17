@@ -5,6 +5,7 @@ import (
 	"BigDisk/template"
 	_ "embed"
 	"encoding/json"
+	"sort"
 	"strings"
 )
 
@@ -40,15 +41,17 @@ func (p *TreeProcessor) Process(unit *domainmodels.FileUnit) {
 func (p *TreeProcessor) ToFlameNode(unit *domainmodels.FileUnit, minSize int64, depth int) *domainmodels.FlameNode {
 	var flame = &domainmodels.FlameNode{
 		Name:  unit.Name,
-		Value: float64(unit.Size) / (1024 * 1024),
+		Value: float64(unit.Size) / (1024 * 1024), // MB display
 	}
-
-	// if unit.Size < minSize {
-	// 	return flame
-	// }
 
 	if depth <= 0 {
 		return flame
+	}
+
+	if len(unit.Children) > 0 {
+		sort.Slice(unit.Children, func(i, j int) bool {
+			return unit.Children[i].Size > unit.Children[j].Size
+		})
 	}
 
 	for _, u := range unit.Children {
