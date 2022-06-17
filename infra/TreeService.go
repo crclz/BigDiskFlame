@@ -7,6 +7,9 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
+	"strings"
 )
 
 type TreeService struct {
@@ -71,13 +74,76 @@ func (p *TreeService) GetUnit(path string) (*domainmodels.FileUnit, error) {
 	return unit, nil
 }
 
+func (p *TreeService) SelectTrimmedWhereNotWhitespace(x []string) []string {
+	var result []string
+
+	for _, s := range x {
+		s = strings.Trim(s, " \r\t")
+
+		if len(s) != 0 {
+			result = append(result, s)
+		}
+	}
+
+	return result
+}
+
 func (p *TreeService) GetUnitFromDuResult(reader io.Reader) (*domainmodels.FileUnit, error) {
 	var scanner = bufio.NewScanner(reader)
 
 	var lines = 0
 
+	var nodeMap = map[string]*domainmodels.FileUnit{
+		"": {Name: ""},
+	} // key="/data00/abc" value=node
+
+	var GetNode func(path string) *domainmodels.FileUnit
+
+	GetNode = func(path string) *domainmodels.FileUnit {
+		if path == "" {
+			return nodeMap[path]
+		}
+
+		path = strings.TrimRight(path, "/")
+
+		// 责任链
+		var node = nodeMap[path]
+
+		if node != nil {
+			return node
+		}
+
+		var parentPath = path[:strings.LastIndex(path, "/")]
+		var name = path[strings.LastIndex(path, "/")+1:]
+
+		var parentNode = GetNode(parentPath)
+
+		var currentNode = &domainmodels.FileUnit{
+			Name:   name,
+			IsFile: false,
+		}
+
+		parentNode.Children = append(parentNode.Children, currentNode)
+
+		return currentNode
+	}
+
 	for scanner.Scan() {
-		lines++
+		var text = scanner.Text()
+		var parts = regexp.MustCompile("[\t]").Split(text, -1)
+		parts = p.SelectTrimmedWhereNotWhitespace(parts)
+
+		if len(parts) != 2 {
+			fmt.Printf("Skip line: %v\n", text)
+		}
+
+		size, err := strconv.ParseInt(parts[0], 10, 64)
+		if err != nil {
+			panic(err)
+		}
+
+		var node = GetNode(parts[1])
+		node.Size = size
 	}
 
 	fmt.Printf("lines: %v\n", lines)
