@@ -51,6 +51,7 @@ func main_old() {
 
 func main() {
 	var treeService = infra.GetSingletonTreeService()
+	var treeProcessor = domainservices.GetSingletonTreeProcessor()
 
 	file, err := os.Open("du-result.txt")
 	if err != nil {
@@ -58,5 +59,15 @@ func main() {
 	}
 	defer file.Close()
 
-	treeService.GetUnitFromDuResult(file)
+	root, err := treeService.GetUnitFromDuResult(file)
+
+	if err != nil {
+		panic(err)
+	}
+
+	var flameRoot = treeProcessor.ToFlameNode(root, 1024*50, 9)
+
+	var html = treeProcessor.GenerateReportHtml(flameRoot)
+
+	ioutil.WriteFile(fmt.Sprintf("%v.disk.html", time.Now().Unix()), []byte(html), 0644)
 }

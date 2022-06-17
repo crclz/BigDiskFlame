@@ -1,6 +1,7 @@
 /BigDisk
 /BigDisk.exe
 *.result.html
+*.disk.html
 *.log
 du*.txt
 .DS_Store

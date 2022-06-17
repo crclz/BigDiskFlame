@@ -93,8 +93,10 @@ func (p *TreeService) GetUnitFromDuResult(reader io.Reader) (*domainmodels.FileU
 
 	var lines = 0
 
+	var rootNode = &domainmodels.FileUnit{Name: ""}
+
 	var nodeMap = map[string]*domainmodels.FileUnit{
-		"": {Name: ""},
+		"": rootNode,
 	} // key="/data00/abc" value=node
 
 	var GetNode func(path string) *domainmodels.FileUnit
@@ -125,6 +127,8 @@ func (p *TreeService) GetUnitFromDuResult(reader io.Reader) (*domainmodels.FileU
 
 		parentNode.Children = append(parentNode.Children, currentNode)
 
+		nodeMap[path] = currentNode
+
 		return currentNode
 	}
 
@@ -148,5 +152,5 @@ func (p *TreeService) GetUnitFromDuResult(reader io.Reader) (*domainmodels.FileU
 
 	fmt.Printf("lines: %v\n", lines)
 
-	return nil, nil
+	return nodeMap[""], nil
 }
