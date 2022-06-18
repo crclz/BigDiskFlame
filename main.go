@@ -5,6 +5,7 @@ import (
 	"BigDisk/domainservices"
 	"BigDisk/infra"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -50,10 +51,21 @@ func main_old() {
 }
 
 func main() {
+	var duFilename = flag.String("du", "du-result.txt", "To make du result: du ${path} > du-result.txt")
+	var minSizeMB = flag.Int64("min-size-mb", 200, "200. Has impact on html performance")
+	var maxDepth = flag.Int("max-depth", 8, "8. Has impact on html performance")
+	var outputHtml = flag.String("out-html", "", "The output html filename.")
+
+	flag.Parse()
+
+	if *outputHtml == "" {
+		*outputHtml = fmt.Sprintf("%v.disk.html", time.Now().Unix())
+	}
+
 	var treeService = infra.GetSingletonTreeService()
 	var treeProcessor = domainservices.GetSingletonTreeProcessor()
 
-	file, err := os.Open("du-result.txt")
+	file, err := os.Open(*duFilename)
 	if err != nil {
 		panic(err)
 	}
@@ -61,15 +73,13 @@ func main() {
 
 	root, err := treeService.GetUnitFromDuResult(file)
 
-	treeProcessor.Process(root)
-
 	if err != nil {
 		panic(err)
 	}
 
-	var flameRoot = treeProcessor.ToFlameNode(root, 1024*1024*100, 5)
+	var flameRoot = treeProcessor.ToFlameNode(root, *minSizeMB*1024*1024, *maxDepth)
 
 	var html = treeProcessor.GenerateReportHtml(flameRoot)
 
-	ioutil.WriteFile(fmt.Sprintf("%v.disk.html", time.Now().Unix()), []byte(html), 0644)
+	ioutil.WriteFile(*outputHtml, []byte(html), 0644)
 }

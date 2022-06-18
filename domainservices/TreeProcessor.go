@@ -5,7 +5,6 @@ import (
 	"BigDisk/template"
 	_ "embed"
 	"encoding/json"
-	"fmt"
 	"sort"
 	"strings"
 )
@@ -45,6 +44,8 @@ func (p *TreeProcessor) ToFlameNode(unit *domainmodels.FileUnit, minSize int64, 
 		Value: float64(unit.Size) / (1024 * 1024), // MB display
 	}
 
+	// check
+
 	if depth <= 0 {
 		return flame
 	}
@@ -63,7 +64,6 @@ func (p *TreeProcessor) ToFlameNode(unit *domainmodels.FileUnit, minSize int64, 
 
 	if smallFileUnit.Size > 0 {
 		newChildren = append(newChildren, smallFileUnit)
-		fmt.Printf("%v\n", smallFileUnit.Size)
 	}
 
 	// order by size desc
