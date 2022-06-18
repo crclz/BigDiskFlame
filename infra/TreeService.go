@@ -100,8 +100,8 @@ func (p *TreeService) GetUnitFromDuResult(reader io.Reader) (*domainmodels.FileU
 	var GetNode func(path string) *domainmodels.FileUnit
 
 	GetNode = func(path string) *domainmodels.FileUnit {
-		if path == "" {
-			return nodeMap[path]
+		if path == "" || path == "." {
+			return nodeMap[""]
 		}
 
 		path = strings.TrimRight(path, "/")
