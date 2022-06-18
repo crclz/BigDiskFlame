@@ -91,7 +91,7 @@ func (p *TreeProcessor) GenerateReportHtml(node *domainmodels.FlameNode) string 
 		panic(err)
 	}
 
-	var html = strings.ReplaceAll(template.GetHtmlTemplate(), "{flameDataPlaceHolder}", string(flameDataBytes))
+	var html = strings.ReplaceAll(template.GetHtmlTemplate(), "{ flameDataPlaceHolder }", string(flameDataBytes))
 
 	return html
 }
