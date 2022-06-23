@@ -31,6 +31,10 @@ func (p *TreeProcessor) Process(unit *domainmodels.FileUnit) {
 		panic("unit is nil")
 	}
 
+	if unit.Size != 0 {
+		return
+	}
+
 	for _, u := range unit.Children {
 		p.Process(u)
 

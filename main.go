@@ -73,6 +73,8 @@ func main() {
 
 	root, err := treeService.GetUnitFromDuResult(file)
 
+	treeProcessor.Process(root)
+
 	if err != nil {
 		panic(err)
 	}
