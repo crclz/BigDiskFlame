@@ -1,7 +1,6 @@
 package infra
 
 import (
-	"BigDisk/domainmodels"
 	"bufio"
 	"fmt"
 	"io"
@@ -10,6 +9,8 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/crclz/BigDiskFlame/domainmodels"
 )
 
 type TreeService struct {

@@ -1,5 +1,7 @@
 /BigDisk
 /BigDisk.exe
+/BigDiskFlame
+/BigDiskFlame.exe
 *.result.html
 *.disk.html
 *.log

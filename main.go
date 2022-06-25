@@ -1,15 +1,16 @@
 package main
 
 import (
-	"BigDisk/domainmodels"
-	"BigDisk/domainservices"
-	"BigDisk/infra"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"time"
+
+	"github.com/crclz/BigDiskFlame/domainmodels"
+	"github.com/crclz/BigDiskFlame/domainservices"
+	"github.com/crclz/BigDiskFlame/infra"
 )
 
 func main_old() {

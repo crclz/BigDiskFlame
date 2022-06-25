@@ -1,12 +1,13 @@
 package domainservices
 
 import (
-	"BigDisk/domainmodels"
-	"BigDisk/template"
 	_ "embed"
 	"encoding/json"
 	"sort"
 	"strings"
+
+	"github.com/crclz/BigDiskFlame/domainmodels"
+	"github.com/crclz/BigDiskFlame/template"
 )
 
 type TreeProcessor struct {

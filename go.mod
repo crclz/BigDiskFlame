@@ -1,4 +1,4 @@
-module BigDisk
+module github.com/crclz/BigDiskFlame
 
 go 1.17
 
