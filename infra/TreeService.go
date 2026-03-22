@@ -105,6 +105,8 @@ func (p *TreeService) GetUnitFromDuResult(reader io.Reader) (*domainmodels.FileU
 			return nodeMap[""]
 		}
 
+		path = strings.ReplaceAll(path, "\\", "/")
+
 		path = strings.TrimRight(path, "/")
 
 		// 责任链
